@@ -192,6 +192,7 @@ def handler(job):
         video_path = process_input(job_input["video_base64"], task_id, "input_video.mp4", "base64")
 
     check_coord = job_input.get("points_store", None)
+    workflow_type = job_input.get("workflow_type", "default")
 
     # Validate required inputs
     if image_path is None:
@@ -202,7 +203,25 @@ def handler(job):
     # Initialize prompt variable to avoid UnboundLocalError
     prompt = None
 
-    if check_coord == None:
+    # SCAIL 워크플로우 선택
+    if workflow_type == "scail_dance":
+        prompt = load_workflow('/XiCON_Dance_SCAIL_api.json')
+
+        # XiCON Dance SCAIL 노드 매핑
+        prompt["106"]["inputs"]["image"] = image_path
+        prompt["130"]["inputs"]["video"] = video_path
+        prompt["130"]["inputs"]["force_rate"] = job_input["fps"]
+        prompt["139"]["inputs"]["frame_rate"] = job_input["fps"]
+        prompt["368"]["inputs"]["positive_prompt"] = job_input["prompt"]
+        if "negative_prompt" in job_input:
+            prompt["368"]["inputs"]["negative_prompt"] = job_input["negative_prompt"]
+        prompt["348"]["inputs"]["seed"] = job_input["seed"]
+        prompt["238"]["inputs"]["value"] = job_input["cfg"]
+        prompt["349"]["inputs"]["steps"] = job_input.get("steps", 6)
+        prompt["203"]["inputs"]["value"] = job_input["width"]
+        prompt["204"]["inputs"]["value"] = job_input["height"]
+
+    elif check_coord == None:
         if job_input.get("mode", "replace") == "animate":
             prompt = load_workflow('/newWanAnimate_noSAM_animate_api.json')
         else:

@@ -61,8 +61,29 @@ RUN wget -q https://huggingface.co/Wan-AI/Wan2.2-Animate-14B/resolve/main/proces
 RUN wget -q https://huggingface.co/Kijai/vitpose_comfy/resolve/main/onnx/vitpose_h_wholebody_model.onnx -O /ComfyUI/models/detection/vitpose_h_wholebody_model.onnx
 RUN wget -q https://huggingface.co/Kijai/vitpose_comfy/resolve/main/onnx/vitpose_h_wholebody_data.bin -O /ComfyUI/models/detection/vitpose_h_wholebody_data.bin
 
+# SCAIL 워크플로우 전용 모델 다운로드
+RUN wget -q https://huggingface.co/Kijai/WanVideo_comfy_fp8_scaled/resolve/main/SCAIL/Wan21-14B-SCAIL-preview_fp8_e4m3fn_scaled_KJ.safetensors \
+    -O /ComfyUI/models/diffusion_models/Wan21-14B-SCAIL-preview_fp8_e4m3fn_scaled_KJ.safetensors
+
+# SCAIL VAE 다운로드 (기존 VAE와 다른 파일)
+RUN wget -q https://huggingface.co/Wan-AI/Wan2.1-T2V-14B/resolve/main/Wan2.1_VAE.pth \
+    -O /ComfyUI/models/vae/Wan2.1_VAE.pth
+
+# LightX2V LoRA 다운로드
+RUN wget -q https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors \
+    -O /ComfyUI/models/loras/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors
+
+# NLF 모델 사전 다운로드 (cold start 시간 단축)
+RUN mkdir -p /root/.cache/torch/hub/checkpoints && \
+    wget -q https://github.com/isarandi/nlf/releases/download/v0.3.2/nlf_l_multi_0.3.2.torchscript \
+    -O /root/.cache/torch/hub/checkpoints/nlf_l_multi_0.3.2.torchscript
 
 COPY . .
+# XiCON Dance SCAIL 워크플로우 복사
+COPY "XiCON_Dance_Runpod_Refact/XiCON_Dance_SCAIL(API).json" /XiCON_Dance_SCAIL_api.json
+
+# Default video 복사 (워크플로우 노드 130에서 사용)
+COPY asset/default_video.mp4 /ComfyUI/input/default_video.mp4
 RUN mkdir -p /ComfyUI/user/default/ComfyUI-Manager
 COPY config.ini /ComfyUI/user/default/ComfyUI-Manager/config.ini
 RUN chmod +x /entrypoint.sh
