@@ -312,6 +312,6 @@ def handler(job):
         if videos[node_id]:
             return {"video": videos[node_id][0]}
     
-    return {"error": "비디오를를 찾을 수 없습니다."}
+    return {"error": "비디오를 찾을 수 없습니다."}
 
 runpod.serverless.start({"handler": handler})
