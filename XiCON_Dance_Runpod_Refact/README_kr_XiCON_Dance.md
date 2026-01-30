@@ -144,6 +144,7 @@ print(f"배치 처리 완료: {batch_result['successful']}/{batch_result['total_
 #### 애니메이션 매개변수
 | 매개변수 | 타입 | 필수 | 기본값 | 설명 |
 | --- | --- | --- | --- | --- |
+| `workflow_type` | `string` | **예** | - | 워크플로우 유형 (SCAIL 댄스의 경우 `"scail_dance"` 사용 필수) |
 | `prompt` | `string` | **예** | - | 생성할 댄스 애니메이션 설명 (예: "the human starts to dance") |
 | `negative_prompt` | `string` | 아니오 | - | 원하지 않는 요소 제거 프롬프트 |
 | `seed` | `integer` | **예** | - | 랜덤 시드 (재현성을 위해 사용) |
@@ -201,6 +202,7 @@ print(f"배치 처리 완료: {batch_result['successful']}/{batch_result['total_
 ```json
 {
   "input": {
+    "workflow_type": "scail_dance",
     "prompt": "the human starts to dance",
     "negative_prompt": "색조 과도, 과곡, 정적, 세부 흐림, 자막, 스타일, 작품, 그림, 화면, 정지, 전체 회색, 최악 품질, 낮은 품질",
     "image_base64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...",
@@ -229,6 +231,21 @@ print(f"배치 처리 완료: {batch_result['successful']}/{batch_result['total_
 - **시드 고정**: 재현 가능한 결과를 위해 특정 시드 사용
 - **CFG 스케일**: 1.0 (안정적인 생성)
 - **단계 수**: 6 (품질과 속도의 균형)
+
+### 고급 파라미터 (내부 설정)
+
+다음 파라미터들은 최적의 결과를 위해 내부적으로 고정되어 있습니다:
+
+| 파라미터 | 고정 값 | 이유 |
+| --- | --- | --- |
+| scheduler | DPM++ SDE | SCAIL 모델에 최적화됨 |
+| shift | 5.0 | 샘플링 안정성 |
+| freenoise | 활성화 | 부드러운 모션 생성 |
+| blocks_to_swap | 25 | VRAM 최적화 |
+| context_frames | 81 | 일관된 애니메이션 |
+| context_overlap | 16 | 프레임 연결 품질 |
+
+이 설정들을 변경해야 하는 고급 사용자는 워크플로우 JSON 파일을 직접 수정할 수 있습니다.
 
 ## 🙏 원본 프로젝트
 
