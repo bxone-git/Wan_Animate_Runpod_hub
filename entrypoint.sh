@@ -5,7 +5,14 @@ set -e
 
 # Start ComfyUI in the background
 echo "Starting ComfyUI in the background..."
-python /ComfyUI/main.py --listen --use-sage-attention &
+# SageAttention이 없을 경우를 대비해 fallback 시도
+if python -c "import sageattention" 2>/dev/null; then
+    echo "SageAttention available, using it..."
+    python /ComfyUI/main.py --listen --use-sage-attention &
+else
+    echo "SageAttention not available, starting without it..."
+    python /ComfyUI/main.py --listen &
+fi
 
 # Wait for ComfyUI to be ready
 echo "Waiting for ComfyUI to be ready..."
