@@ -84,6 +84,9 @@ COPY "XiCON_Dance_Runpod_Refact/XiCON_Dance_SCAIL(API).json" /XiCON_Dance_SCAIL_
 
 # Default video 복사 (워크플로우 노드 130에서 사용)
 COPY asset/default_video.mp4 /ComfyUI/input/default_video.mp4
+
+# 테스트 이미지 복사
+COPY asset/25ab29c61a9212fcdbb1d0d18836073a.jpg /ComfyUI/input/test_image.jpg
 RUN mkdir -p /ComfyUI/user/default/ComfyUI-Manager
 COPY config.ini /ComfyUI/user/default/ComfyUI-Manager/config.ini
 RUN chmod +x /entrypoint.sh
