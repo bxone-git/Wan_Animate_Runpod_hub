@@ -7,21 +7,21 @@ RUN pip install -U "huggingface_hub[hf_transfer]" runpod websocket-client
 WORKDIR /
 
 # Clone ComfyUI and install requirements
-RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
+RUN git clone --depth 1 https://github.com/comfyanonymous/ComfyUI.git && \
     cd /ComfyUI && \
     pip install -r requirements.txt
 
 # Clone all custom nodes in single layer
 RUN cd /ComfyUI/custom_nodes && \
-    git clone https://github.com/Comfy-Org/ComfyUI-Manager.git && \
-    git clone https://github.com/kijai/ComfyUI-WanVideoWrapper && \
-    git clone https://github.com/kijai/ComfyUI-KJNodes && \
-    git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite && \
-    git clone https://github.com/kijai/ComfyUI-WanAnimatePreprocess && \
-    git clone https://github.com/kijai/ComfyUI-segment-anything-2 && \
-    git clone https://github.com/eddyhhlure1Eddy/IntelligentVRAMNode && \
-    git clone https://github.com/eddyhhlure1Eddy/auto_wan2.2animate_freamtowindow_server && \
-    git clone https://github.com/eddyhhlure1Eddy/ComfyUI-AdaptiveWindowSize && \
+    git clone --depth 1 https://github.com/Comfy-Org/ComfyUI-Manager.git && \
+    git clone --depth 1 https://github.com/kijai/ComfyUI-WanVideoWrapper && \
+    git clone --depth 1 https://github.com/kijai/ComfyUI-KJNodes && \
+    git clone --depth 1 https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite && \
+    git clone --depth 1 https://github.com/kijai/ComfyUI-WanAnimatePreprocess && \
+    git clone --depth 1 https://github.com/kijai/ComfyUI-segment-anything-2 && \
+    git clone --depth 1 https://github.com/eddyhhlure1Eddy/IntelligentVRAMNode && \
+    git clone --depth 1 https://github.com/eddyhhlure1Eddy/auto_wan2.2animate_freamtowindow_server && \
+    git clone --depth 1 https://github.com/eddyhhlure1Eddy/ComfyUI-AdaptiveWindowSize && \
     cd ComfyUI-AdaptiveWindowSize/ComfyUI-AdaptiveWindowSize && mv * ../
 
 # Install all custom node requirements in single layer

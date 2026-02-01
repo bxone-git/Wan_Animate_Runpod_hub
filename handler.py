@@ -249,8 +249,8 @@ def handler(job):
         # XiCON Dance SCAIL 노드 매핑
         prompt["106"]["inputs"]["image"] = image_path
         prompt["130"]["inputs"]["video"] = video_path
-        prompt["130"]["inputs"]["force_rate"] = job_input["fps"]
-        prompt["139"]["inputs"]["frame_rate"] = job_input["fps"]
+        prompt["130"]["inputs"]["force_rate"] = job_input.get("fps", 24)
+        prompt["139"]["inputs"]["frame_rate"] = job_input.get("fps", 24)
         prompt["368"]["inputs"]["positive_prompt"] = job_input["prompt"]
         if "negative_prompt" in job_input:
             prompt["368"]["inputs"]["negative_prompt"] = job_input["negative_prompt"]
@@ -268,8 +268,8 @@ def handler(job):
 
         prompt["57"]["inputs"]["image"] = image_path
         prompt["63"]["inputs"]["video"] = video_path
-        prompt["63"]["inputs"]["force_rate"] = job_input["fps"]
-        prompt["30"]["inputs"]["frame_rate"] = job_input["fps"]
+        prompt["63"]["inputs"]["force_rate"] = job_input.get("fps", 24)
+        prompt["30"]["inputs"]["frame_rate"] = job_input.get("fps", 24)
         prompt["65"]["inputs"]["positive_prompt"] = job_input["prompt"]
         if "negative_prompt" in job_input:
             prompt["65"]["inputs"]["negative_prompt"] = job_input["negative_prompt"]
@@ -286,8 +286,8 @@ def handler(job):
         
         prompt["57"]["inputs"]["image"] = image_path
         prompt["63"]["inputs"]["video"] = video_path
-        prompt["63"]["inputs"]["force_rate"] = job_input["fps"]
-        prompt["30"]["inputs"]["frame_rate"] = job_input["fps"]
+        prompt["63"]["inputs"]["force_rate"] = job_input.get("fps", 24)
+        prompt["30"]["inputs"]["frame_rate"] = job_input.get("fps", 24)
         prompt["65"]["inputs"]["positive_prompt"] = job_input["prompt"]
         if "negative_prompt" in job_input:
             prompt["65"]["inputs"]["negative_prompt"] = job_input["negative_prompt"]
