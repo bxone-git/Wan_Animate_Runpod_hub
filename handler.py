@@ -175,30 +175,69 @@ def handler(job):
 
     image_path = None
     # 이미지 입력 처리 (image_path, image_url, image_base64 중 하나만 사용)
+    # 또한 images.reference_image 형식도 지원
     if "image_path" in job_input:
         image_path = process_input(job_input["image_path"], task_id, "input_image.jpg", "path")
     elif "image_url" in job_input:
         image_path = process_input(job_input["image_url"], task_id, "input_image.jpg", "url")
     elif "image_base64" in job_input:
         image_path = process_input(job_input["image_base64"], task_id, "input_image.jpg", "base64")
+    elif "images" in job_input and isinstance(job_input["images"], dict):
+        # images.reference_image 형식 지원
+        images_dict = job_input["images"]
+        ref_image = images_dict.get("reference_image", "")
+        if ref_image:
+            # URL인지 base64인지 경로인지 자동 감지
+            if ref_image.startswith("http://") or ref_image.startswith("https://"):
+                image_path = process_input(ref_image, task_id, "input_image.jpg", "url")
+            elif ref_image.startswith("/") or ref_image.startswith("."):
+                image_path = process_input(ref_image, task_id, "input_image.jpg", "path")
+            else:
+                # Base64로 간주
+                image_path = process_input(ref_image, task_id, "input_image.jpg", "base64")
 
     video_path = None
     # 비디오 입력 처리 (video_path, video_url, video_base64 중 하나만 사용)
+    # 또한 videos.dance_video 형식도 지원
     if "video_path" in job_input:
         video_path = process_input(job_input["video_path"], task_id, "input_video.mp4", "path")
     elif "video_url" in job_input:
         video_path = process_input(job_input["video_url"], task_id, "input_video.mp4", "url")
     elif "video_base64" in job_input:
         video_path = process_input(job_input["video_base64"], task_id, "input_video.mp4", "base64")
+    elif "videos" in job_input and isinstance(job_input["videos"], dict):
+        # videos.dance_video 형식 지원
+        videos_dict = job_input["videos"]
+        dance_video = videos_dict.get("dance_video", "")
+        if dance_video:
+            # URL인지 base64인지 경로인지 자동 감지
+            if dance_video.startswith("http://") or dance_video.startswith("https://"):
+                video_path = process_input(dance_video, task_id, "input_video.mp4", "url")
+            elif dance_video.startswith("/") or dance_video.startswith("."):
+                video_path = process_input(dance_video, task_id, "input_video.mp4", "path")
+            else:
+                # Base64로 간주
+                video_path = process_input(dance_video, task_id, "input_video.mp4", "base64")
 
     check_coord = job_input.get("points_store", None)
     workflow_type = job_input.get("workflow_type", "default")
 
+    # Check for empty nested values and provide specific feedback
+    if image_path is None and "images" in job_input:
+        images_dict = job_input.get("images", {})
+        if isinstance(images_dict, dict) and images_dict.get("reference_image") == "":
+            raise Exception("images.reference_image was provided but is empty. Please provide a valid URL, path, or base64 string.")
+
+    if video_path is None and "videos" in job_input:
+        videos_dict = job_input.get("videos", {})
+        if isinstance(videos_dict, dict) and videos_dict.get("dance_video") == "":
+            raise Exception("videos.dance_video was provided but is empty. Please provide a valid URL, path, or base64 string.")
+
     # Validate required inputs
     if image_path is None:
-        raise Exception("Image input is required. Provide image_path, image_url, or image_base64")
+        raise Exception("Image input is required. Provide image_path, image_url, image_base64, or images.reference_image")
     if video_path is None:
-        raise Exception("Video input is required. Provide video_path, video_url, or video_base64")
+        raise Exception("Video input is required. Provide video_path, video_url, video_base64, or videos.dance_video")
 
     # Initialize prompt variable to avoid UnboundLocalError
     prompt = None

@@ -61,6 +61,20 @@ Optional: `steps` (default 6), `negative_prompt`, `workflow_type`, `points_store
 
 Typical values: width=416, height=672, fps=24, cfg=1.0, steps=6
 
+### Input Formats
+
+The handler accepts two input format styles:
+
+**Flat Format (original):**
+- `image_path` / `image_url` / `image_base64` - Reference image
+- `video_path` / `video_url` / `video_base64` - Dance video
+
+**Nested Format (new):**
+- `images.reference_image` - Auto-detects URL/path/base64
+- `videos.dance_video` - Auto-detects URL/path/base64
+
+Both formats are fully supported. The handler auto-detects the input type for nested format values.
+
 ## GPU Requirements
 
 - GPU: RTX 6000 Ada / A100 40GB recommended
